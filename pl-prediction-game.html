@@ -1,0 +1,764 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premier League Prediction Game 2025-26</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1a0033 0%, #330066 50%, #4d0099 100%);
+            min-height: 100vh;
+            color: white;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 20% 80%, rgba(0, 255, 136, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 0, 128, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(0, 136, 255, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, #00ff88, #00aaff);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            font-weight: bold;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #00ff88, #00aaff, #ff0088);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient 3s ease infinite;
+            background-size: 200% 200%;
+        }
+
+        @keyframes gradient {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            padding: 12px 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            backdrop-filter: blur(10px);
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .tab-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .tab-btn.active {
+            background: linear-gradient(135deg, #00ff88, #00aaff);
+            border-color: transparent;
+            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .content {
+            display: none;
+            animation: fadeIn 0.5s;
+        }
+
+        .content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .submit-form {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #00ff88;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+
+        input[type="text"]:focus {
+            outline: none;
+            border-color: #00ff88;
+            background: rgba(255, 255, 255, 0.15);
+            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+        }
+
+        .teams-list {
+            list-style: none;
+            margin-bottom: 20px;
+        }
+
+        .team-item {
+            background: rgba(255, 255, 255, 0.08);
+            margin-bottom: 8px;
+            padding: 15px;
+            border-radius: 12px;
+            cursor: move;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            border: 2px solid transparent;
+        }
+
+        .team-item:hover {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(1.02);
+            border-color: rgba(0, 255, 136, 0.3);
+        }
+
+        .team-item.dragging {
+            opacity: 0.5;
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .position-number {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #00ff88, #00aaff);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        .team-logo {
+            width: 30px;
+            height: 30px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 8px;
+            flex-shrink: 0;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #00ff88, #00aaff);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .submit-btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 255, 136, 0.5);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .leaderboard {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            padding: 30px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .submission-card {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .submission-card:hover {
+            transform: translateX(5px);
+            border-color: rgba(0, 255, 136, 0.3);
+            background: rgba(255, 255, 255, 0.12);
+        }
+
+        .submission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .player-name {
+            font-size: 1.3em;
+            font-weight: bold;
+            background: linear-gradient(90deg, #00ff88, #00aaff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .score-badge {
+            background: linear-gradient(135deg, #ff0088, #ff6600);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 1.1em;
+            box-shadow: 0 0 20px rgba(255, 0, 136, 0.3);
+        }
+
+        .team-predictions {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .prediction-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            font-size: 0.9em;
+        }
+
+        .predicted-pos {
+            background: rgba(255, 255, 255, 0.15);
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-weight: bold;
+            min-width: 28px;
+            text-align: center;
+        }
+
+        .prediction-score {
+            margin-left: auto;
+            padding: 2px 8px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 12px;
+            font-weight: bold;
+        }
+
+        .prediction-score.correct {
+            background: linear-gradient(135deg, #00ff88, #00ff44);
+            color: #001a00;
+        }
+
+        .see-all-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9em;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .see-all-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .update-btn {
+            padding: 12px 24px;
+            background: linear-gradient(135deg, #ff0088, #ff6600);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .update-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 30px rgba(255, 0, 136, 0.5);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        .empty-state h3 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+        }
+
+        .floating-shapes {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 170, 255, 0.1));
+            animation: float 20s infinite ease-in-out;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            33% { transform: translateY(-100px) rotate(120deg); }
+            66% { transform: translateY(50px) rotate(240deg); }
+        }
+
+        .alerts {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+        }
+
+        .alert {
+            background: linear-gradient(135deg, #00ff88, #00aaff);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            animation: slideIn 0.5s, slideOut 0.5s 2.5s;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(400px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        @keyframes slideOut {
+            from { transform: translateX(0); opacity: 1; }
+            to { transform: translateX(400px); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="floating-shapes">
+        <div class="shape" style="width: 200px; height: 200px; top: 10%; left: 10%; animation-delay: 0s;"></div>
+        <div class="shape" style="width: 150px; height: 150px; top: 60%; right: 10%; animation-delay: 5s;"></div>
+        <div class="shape" style="width: 100px; height: 100px; bottom: 10%; left: 50%; animation-delay: 10s;"></div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <div class="logo">⚽</div>
+            <h1>Premier League Prediction Game</h1>
+            <p style="color: rgba(255, 255, 255, 0.7);">2025-26 Season</p>
+        </div>
+
+        <div class="nav-tabs">
+            <button class="tab-btn active" onclick="switchTab('submit')">Submit Prediction</button>
+            <button class="tab-btn" onclick="switchTab('leaderboard')">Leaderboard</button>
+        </div>
+
+        <div id="submit" class="content active">
+            <div class="submit-form">
+                <div class="form-group">
+                    <label for="playerName">Your Name</label>
+                    <input type="text" id="playerName" placeholder="Enter your name">
+                </div>
+
+                <div class="form-group">
+                    <label>Drag to reorder teams (1st to 20th)</label>
+                    <ul class="teams-list" id="teamsList">
+                        <!-- Teams will be populated here -->
+                    </ul>
+                </div>
+
+                <button class="submit-btn" onclick="submitPrediction()">Submit Prediction</button>
+            </div>
+        </div>
+
+        <div id="leaderboard" class="content">
+            <div class="leaderboard">
+                <h2 style="margin-bottom: 20px; text-align: center;">Current Standings</h2>
+                <button class="update-btn" onclick="updateStandings()">Update Live Standings</button>
+                <div id="submissions">
+                    <div class="empty-state">
+                        <h3>No predictions yet</h3>
+                        <p>Be the first to submit your prediction!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="alerts" id="alerts"></div>
+
+    <script>
+        const teams = [
+            'Arsenal', 'Aston Villa', 'Bournemouth', 'Brentford', 'Brighton and Hove Albion',
+            'Burnley', 'Chelsea', 'Crystal Palace', 'Everton', 'Fulham',
+            'Leeds United', 'Liverpool', 'Manchester City', 'Manchester United', 'Newcastle United',
+            'Nottingham Forest', 'Sunderland', 'Tottenham Hotspur', 'West Ham United', 'Wolverhampton Wanderers'
+        ];
+
+        let currentStandings = [...teams];
+        let submissions = [];
+
+        function initializeTeamsList() {
+            const teamsList = document.getElementById('teamsList');
+            teamsList.innerHTML = '';
+            
+            teams.forEach((team, index) => {
+                const li = document.createElement('li');
+                li.className = 'team-item';
+                li.draggable = true;
+                li.dataset.team = team;
+                li.innerHTML = `
+                    <span class="position-number">${index + 1}</span>
+                    <span class="team-logo"></span>
+                    <span>${team}</span>
+                `;
+                teamsList.appendChild(li);
+            });
+
+            addDragListeners();
+        }
+
+        function addDragListeners() {
+            const teamsList = document.getElementById('teamsList');
+            const items = teamsList.querySelectorAll('.team-item');
+            
+            items.forEach(item => {
+                item.addEventListener('dragstart', handleDragStart);
+                item.addEventListener('dragover', handleDragOver);
+                item.addEventListener('drop', handleDrop);
+                item.addEventListener('dragend', handleDragEnd);
+            });
+        }
+
+        let draggedElement = null;
+
+        function handleDragStart(e) {
+            draggedElement = this;
+            this.classList.add('dragging');
+            e.dataTransfer.effectAllowed = 'move';
+        }
+
+        function handleDragOver(e) {
+            if (e.preventDefault) {
+                e.preventDefault();
+            }
+            e.dataTransfer.dropEffect = 'move';
+            
+            const afterElement = getDragAfterElement(e.currentTarget.parentElement, e.clientY);
+            if (afterElement == null) {
+                e.currentTarget.parentElement.appendChild(draggedElement);
+            } else {
+                e.currentTarget.parentElement.insertBefore(draggedElement, afterElement);
+            }
+            
+            updatePositionNumbers();
+            return false;
+        }
+
+        function handleDrop(e) {
+            if (e.stopPropagation) {
+                e.stopPropagation();
+            }
+            return false;
+        }
+
+        function handleDragEnd(e) {
+            this.classList.remove('dragging');
+        }
+
+        function getDragAfterElement(container, y) {
+            const draggableElements = [...container.querySelectorAll('.team-item:not(.dragging)')];
+            
+            return draggableElements.reduce((closest, child) => {
+                const box = child.getBoundingClientRect();
+                const offset = y - box.top - box.height / 2;
+                
+                if (offset < 0 && offset > closest.offset) {
+                    return { offset: offset, element: child };
+                } else {
+                    return closest;
+                }
+            }, { offset: Number.NEGATIVE_INFINITY }).element;
+        }
+
+        function updatePositionNumbers() {
+            const items = document.querySelectorAll('.team-item');
+            items.forEach((item, index) => {
+                item.querySelector('.position-number').textContent = index + 1;
+            });
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.content').forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tab).classList.add('active');
+            
+            if (tab === 'leaderboard') {
+                displaySubmissions();
+            }
+        }
+
+        function submitPrediction() {
+            const playerName = document.getElementById('playerName').value.trim();
+            
+            if (!playerName) {
+                showAlert('Please enter your name!', 'error');
+                return;
+            }
+            
+            // Check if player already submitted
+            if (submissions.some(s => s.name.toLowerCase() === playerName.toLowerCase())) {
+                showAlert('You have already submitted a prediction!', 'error');
+                return;
+            }
+            
+            const teamItems = document.querySelectorAll('.team-item');
+            const prediction = Array.from(teamItems).map(item => item.dataset.team);
+            
+            submissions.push({
+                name: playerName,
+                prediction: prediction,
+                timestamp: new Date().toISOString()
+            });
+            
+            // Save to storage
+            saveSubmissions();
+            
+            showAlert('Prediction submitted successfully!', 'success');
+            
+            // Reset form
+            document.getElementById('playerName').value = '';
+            initializeTeamsList();
+            
+            // Switch to leaderboard
+            document.querySelectorAll('.tab-btn')[1].click();
+        }
+
+        function calculateScore(prediction) {
+            let totalScore = 0;
+            const scores = [];
+            
+            prediction.forEach((team, predictedPos) => {
+                const actualPos = currentStandings.indexOf(team);
+                const diff = Math.abs(actualPos - predictedPos);
+                totalScore += diff;
+                scores.push({
+                    team: team,
+                    predicted: predictedPos + 1,
+                    actual: actualPos + 1,
+                    score: diff
+                });
+            });
+            
+            return { total: totalScore, details: scores };
+        }
+
+        function displaySubmissions() {
+            const container = document.getElementById('submissions');
+            
+            if (submissions.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No predictions yet</h3>
+                        <p>Be the first to submit your prediction!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Calculate scores and sort
+            const scoredSubmissions = submissions.map(sub => ({
+                ...sub,
+                score: calculateScore(sub.prediction)
+            })).sort((a, b) => a.score.total - b.score.total);
+            
+            container.innerHTML = scoredSubmissions.map((sub, index) => {
+                const showAll = sub.showAll || false;
+                const displayCount = showAll ? 20 : 4;
+                
+                return `
+                <div class="submission-card">
+                    <div class="submission-header">
+                        <div>
+                            <span style="font-size: 2em; margin-right: 10px;">${index === 0 ? '🏆' : index === 1 ? '🥈' : index === 2 ? '🥉' : ''}</span>
+                            <span class="player-name">${sub.name}</span>
+                        </div>
+                        <div class="score-badge">Score: ${sub.score.total}</div>
+                    </div>
+                    <div class="team-predictions">
+                        ${sub.score.details.slice(0, displayCount).map(detail => `
+                            <div class="prediction-item">
+                                <span class="predicted-pos">${detail.predicted}</span>
+                                <span>${detail.team}</span>
+                                <span class="prediction-score ${detail.score === 0 ? 'correct' : ''}">
+                                    ${detail.score === 0 ? '✓' : '+' + detail.score}
+                                </span>
+                            </div>
+                        `).join('')}
+                    </div>
+                    ${sub.score.details.length > 4 ? `
+                        <button class="see-all-btn" onclick="toggleSeeAll('${sub.name}')">
+                            ${showAll ? 'Show Less' : 'See All 20 Teams'}
+                        </button>
+                    ` : ''}
+                </div>
+            `}).join('');
+        }
+
+        function toggleSeeAll(playerName) {
+            const subIndex = submissions.findIndex(s => s.name === playerName);
+            if (subIndex !== -1) {
+                submissions[subIndex].showAll = !submissions[subIndex].showAll;
+                displaySubmissions();
+            }
+        }
+
+        function updateStandings() {
+            showAlert('Searching for live standings...', 'info');
+            
+            // Simulate getting updated standings
+            // In production, this would call Claude's web search
+            setTimeout(() => {
+                // For demo purposes, shuffle slightly
+                const shuffled = [...currentStandings];
+                for (let i = 0; i < 5; i++) {
+                    const j = Math.floor(Math.random() * 20);
+                    const k = Math.floor(Math.random() * 20);
+                    [shuffled[j], shuffled[k]] = [shuffled[k], shuffled[j]];
+                }
+                currentStandings = shuffled;
+                
+                saveStandings();
+                displaySubmissions();
+                showAlert('Standings updated successfully!', 'success');
+            }, 1500);
+        }
+
+        function showAlert(message, type) {
+            const alertsContainer = document.getElementById('alerts');
+            const alert = document.createElement('div');
+            alert.className = 'alert';
+            alert.textContent = message;
+            alertsContainer.appendChild(alert);
+            
+            setTimeout(() => {
+                alert.remove();
+            }, 3000);
+        }
+
+        function saveSubmissions() {
+            // In memory storage only (no localStorage per requirements)
+            // Data persists during session
+        }
+
+        function saveStandings() {
+            // In memory storage only (no localStorage per requirements)
+            // Data persists during session
+        }
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', () => {
+            initializeTeamsList();
+        });
+    </script>
+</body>
+</html>
